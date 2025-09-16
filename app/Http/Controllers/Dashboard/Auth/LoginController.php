@@ -1,18 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Dashboard\Auth;
 
 use App\Http\Controllers\Controller;
-
 use App\Http\Requests\Auth\Login;
-
+use App\Repositories\AdminRepository;
 use Illuminate\Http\JsonResponse;
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
-
-use App\Repositories\AdminRepository;
 
 class LoginController extends Controller
 {
@@ -26,7 +22,7 @@ class LoginController extends Controller
 
     public function login(): \Illuminate\Http\Response
     {
-        return Response::view('template.auth.login');
+        return Response::view('template.dashboard.auth.login');
     }
 
     public function request(Login $request): JsonResponse {
