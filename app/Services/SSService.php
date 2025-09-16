@@ -31,6 +31,92 @@
             ];
         }
 
+        public function getMunicipalities()
+        {
+            $municipalities = Http::withToken($this->getToken()['access_token'])
+                    ->post(Config::get('ss.get_municipalities_url'));
+            if ($municipalities->failed()) {
+                return [
+                    'success' => false,
+                    'error' => $municipalities->body(),
+                ];
+            }
+            return [
+                'success' => true,
+                'municipalities' => $municipalities->json(),
+            ];
+        }
+
+        public function getCities()
+        {
+            $cities = Http::withToken($this->getToken()['access_token'])
+                ->post(Config::get('ss.get_cities_url'));
+            if ($cities->failed()) {
+                return [
+                    'success' => false,
+                    'error' => $cities->body(),
+                ];
+            }
+            return [
+                'success' => true,
+                'cities' => $cities->json(),
+            ];
+        }
+
+        public function getDistricts($city_id)
+        {
+            $districts = Http::withToken($this->getToken()['access_token'])
+                ->post(Config::get('ss.get_districts_url'), [
+                    'cityId' => $city_id
+                ]);
+            if ($districts->failed()) {
+                return [
+                    'success' => false,
+                    'error' => $districts->body(),
+                ];
+            }
+            return [
+                'success' => true,
+                'districts' => $districts->json(),
+            ];
+        }
+
+        public function getSubDistricts($district_id)
+        {
+            $sub_districts = Http::withToken($this->getToken()['access_token'])
+                ->post(Config::get('ss.get_subdistricts_url'), [
+                    'districtId' => $district_id
+                ]);
+            if ($sub_districts->failed()) {
+                return [
+                    'success' => false,
+                    'error' => $sub_districts->body(),
+                ];
+            }
+            return [
+                'success' => true,
+                'sub_districts' => $sub_districts->json(),
+            ];
+        }
+
+        public function getStreets($subdistrict_id)
+        {
+            $streets = Http::withToken($this->getToken()['access_token'])
+                ->post(Config::get('ss.get_streets_url'), [
+                    'subDistrictId' => $subdistrict_id
+                ]);
+            if ($streets->failed()) {
+                return [
+                    'success' => false,
+                    'error' => $streets->body(),
+                ];
+            }
+            return [
+                'success' => true,
+                'streets' => $streets->json(),
+            ];
+        }
+
         public function uploadImage($image_data)
         {
             $image = Http::withToken($this->getToken()['access_token'])
@@ -72,7 +158,7 @@
             ];
         }
 
-        public function expiredApplicationUpdate($application_id)
+        public function updateExpiredApplication($application_id)
         {
             $expired_application = Http::withToken($this->getToken()['access_token'])
                 ->post(Config::get('ss.expired_application_url'),

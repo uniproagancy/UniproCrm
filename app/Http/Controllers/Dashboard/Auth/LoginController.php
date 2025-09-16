@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dashboard\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\Login;
+use App\Http\Requests\Dashboard\Auth\Login;
 use App\Repositories\AdminRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
