@@ -30,22 +30,4 @@
                 'access_token' => $token['access_token'],
             ];
         }
-
-        public static function getData($lang, $id)
-        {
-            $data = Http::withHeaders([
-                'Accept-Language' => $lang,
-            ])->withToken(self::getToken()['access_token'])
-                ->get('https://test-api.ss.ge/v1/Location/getstreet/'.$id);
-            if ($data->failed()) {
-                return [
-                    'success' => false,
-                    'error' => $data->body(),
-                ];
-            }
-            return [
-                'success' => true,
-                'data' => $data->json(),
-            ];
-        }
     }
