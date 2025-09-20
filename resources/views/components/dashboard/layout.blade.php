@@ -29,6 +29,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/core/menu/menu-types/horizontal-menu.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/plugins/extensions/ext-component-toastr.css') }}">
 
+    @livewireStyles
+
     <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/style.css') }}">
 </head>
 <body class="horizontal-layout horizontal-menu navbar-floating footer-static @if(isset($blank_page)) blank-page @endif" data-open="hover" data-menu="horizontal-menu" data-col="" data-asset-path="{{ asset('dashboard-assets/') }}">
@@ -43,6 +45,7 @@
 @if(!isset($blank_page))
     @include('livewire.dashboard.partials.footer')
 @endif
+
 
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
@@ -64,5 +67,6 @@
         }
     })
 </script>
+@livewireScripts
 </body>
 </html>

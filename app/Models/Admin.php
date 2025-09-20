@@ -15,4 +15,9 @@ class Admin extends Authenticatable
     protected $table = "db_admins";
 
     protected $fillable = ['name','email','password'];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 }
