@@ -50,6 +50,7 @@
 <div class="sidenav-overlay"></div>
 <div class="drag-target"></div>
 
+@livewireScripts
 <script src="{{ asset('dashboard-assets/vendors/js/vendors.min.js') }}"></script>
 <script src="{{ asset('dashboard-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
 <script src="{{ asset('dashboard-assets/vendors/js/extensions/toastr.min.js') }}"></script>
@@ -67,6 +68,17 @@
         }
     })
 </script>
-@livewireScripts
+<script>
+    document.addEventListener("livewire:initialized", () => {
+        Livewire.on('refresh-feather', () => {
+            setTimeout(() => feather.replace(), 0);
+        });
+    });
+    document.addEventListener("livewire:init", () => {
+        Livewire.hook('morph.updated', ({ el, component }) => {
+            feather.replace();
+        });
+    })
+</script>
 </body>
 </html>

@@ -13,4 +13,8 @@
 
         //
         'phone_number' => '555477577',
+
+        //
+        'upload_application_url' => 'https://test-api.ss.ge/v2/RealEstate',
+        'upload_image_url' => 'https://test-api.ss.ge/v2/RealEstate/uploadimage',
     ];

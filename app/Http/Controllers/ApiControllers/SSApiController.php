@@ -23,7 +23,7 @@ class SSApiController extends Controller
     }
     public function uploadSSAplication(Upload $request)
     {
-
+        dd($request->all());
         $application_data = [
             'realEstateTypeId' => $request->realEstateTypeId,
             'realEstateDealTypeId' => $request->realEstateDealTypeId,
@@ -41,17 +41,19 @@ class SSApiController extends Controller
             'locationLongitude' => $request->locationLongitude,
             'priceType' => 1,
             'phoneNumbers' => [
-                'phoneNumber' => Config::get('ss.phone_number'),
+                'phoneNumber' => '598134123',
                 'isMain' => true,
                 'isDelete' => false,
             ],
-            'agentUserId' => $request->agentUserId,
+            'agentUserId' => '6a843c30-35a7-4692-b581-d51b2d7bf8a3',
         ];
-        foreach ($request->parameters as $key => $value) {
-            if(empty($value)) {
-                $application_data[$key] = false;
-            } else {
-                $application_data[$key] = true;
+        if(!empty($request->parameters)) {
+            foreach ($request->parameters as $key => $value) {
+                if(empty($value)) {
+                    $application_data[$key] = false;
+                } else {
+                    $application_data[$key] = true;
+                }
             }
         }
         switch ($application_data['realEstateTypeId']) {
@@ -80,11 +82,19 @@ class SSApiController extends Controller
                 $application_data['state'] = $request->state;
             break;
         }
-        $uploadApplication = SSService::uploadApplication($application_data);
+        $uploadApplication = SSService::uploadSSAplication($application_data);
         return Response::json([
             'success' => true,
         ]);
     }
+
+
+
+
+
+
+
+
 
     public function updateSSAplication(Update $request)
     {

@@ -14,7 +14,7 @@ class Admin extends Authenticatable
 
     protected $table = "db_admins";
 
-    protected $fillable = ['name','email','password'];
+    protected $fillable = ['name', 'lastname', 'email', 'phone','password', 'role_id'];
 
     public function role()
     {

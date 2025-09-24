@@ -30,4 +30,20 @@
                 'access_token' => $token['access_token'],
             ];
         }
+
+        public static function uploadSSAplication($application_data)
+        {
+            $application =  Http::withToken(self::getToken()['access_token'])
+                ->post(Config::get('ss.upload_application_url'), $application_data);
+            if ($application->failed()) {
+                return [
+                    'success' => false,
+                    'error' => $application->body(),
+                ];
+            }
+            return [
+                'success' => true,
+                'response' => $application['body'],
+            ];
+        }
     }

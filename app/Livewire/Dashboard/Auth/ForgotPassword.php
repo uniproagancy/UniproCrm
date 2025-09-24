@@ -2,12 +2,11 @@
 
 namespace App\Livewire\Dashboard\Auth;
 
-use AllowDynamicProperties;
-use App\Repositories\AdminRepository;
+use App\Models\Admin;
+use App\Models\Verification;
 use App\Repositories\VerificationRepository;
 
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 
 use Livewire\Component;
@@ -16,15 +15,12 @@ class ForgotPassword extends Component
 {
     public $email;
 
-    protected $adminRepository;
-
-    public function boot(
-        AdminRepository $adminRepository,
-        VerificationRepository $verificationRepository
-    )
+    public function render()
     {
-        $this->adminRepository = $adminRepository;
-        $this->verificationRepository = $verificationRepository;
+        return view('livewire.dashboard.auth.forgot-password')
+            ->layout('components.dashboard.layout', [
+                'blank_page' => true
+            ]);
     }
 
     public function sendResetLink()
@@ -32,26 +28,20 @@ class ForgotPassword extends Component
         $this->validate([
             'email' => 'required|email|exists:db_admins,email',
         ]);
-        $admin = $this->adminRepository->getItemByEmail($this->email);
-        $this->verificationRepository->forceDelete([
+        $admin = Admin::where('email', $this->email)->first();
+        $verification_code = Str::random(40);
+        Verification::where([
             'admin_id' => $admin->id,
             'type' => 'reset_password',
-        ]);
-        $verification = $this->verificationRepository->create([
+        ])->forceDelete();
+        Verification::create([
             'admin_id' => $admin->id,
             'type' => 'reset_password',
-            'value' => Str::random(40),
+            'value' => $verification_code,
         ]);
-        Mail::raw('აღდგენის ბმული: '. route('dashboard.reset-password', $verification->value), function ($message) use ($admin) {
+        Mail::raw('აღდგენის ბმული: '. route('dashboard.reset-password', $verification_code), function ($message) use ($admin) {
             $message->to($admin->email)->subject('პაროლის აღდგენა');
         });
         $this->dispatch('reset-link-sent', message: 'აღდგენის ბმული გაგზავნილია ელ-ფოსტაზე!');
-    }
-    public function render()
-    {
-        return view('livewire.dashboard.auth.forgot-password')
-            ->layout('components.dashboard.layout', [
-                'blank_page' => true
-            ]);
     }
 }

@@ -1,5 +1,5 @@
 @section('page_css')
-    <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/pages/authentication.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/pages/authentication.css') }}">
 @endsection
 
 <div class="app-content content ">
@@ -47,7 +47,7 @@
 </div>
 <script>
     document.addEventListener("livewire:initialized", () => {
-        
+
         Livewire.on("reset-error", (data) => {
             toastr.error(data.message, "შეცდომა", {
                 closeButton: true,

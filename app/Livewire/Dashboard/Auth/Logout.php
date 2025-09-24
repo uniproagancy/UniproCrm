@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Logout extends Component
 {
-
     public function logout()
     {
         Auth::logout();

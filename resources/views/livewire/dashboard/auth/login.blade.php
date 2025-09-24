@@ -15,9 +15,9 @@
                             <p class="card-text mb-2">ავტორიზაციის გასავლელად გთხოვთ გამოიყენოთ თქვენი ელ-ფოსტა და პაროლი!</p>
                             <form class="auth-login-form mt-2" wire:submit.prevent="login">
                                 <div class="mb-1">
-                                    <label for="email" class="form-label">ელ-ფოსტა</label>
-                                    <input type="text" class="form-control @error('email') border-danger @enderror" id="email" name="email" wire:model="email" />
-                                    @error('email') <span class="error-message text-danger" style="font-size: 12px">{{ $message }}</span> @enderror
+                                    <label class="form-label">ელ-ფოსტა</label>
+                                    <input type="email" wire:model="email" class="form-control @error('email') border-danger is-invalid @enderror">
+                                    @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                                 </div>
                                 <div class="mb-1">
                                     <div class="d-flex justify-content-between">
@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="mb-1">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me" wire:model="password" />
+                                        <input class="form-check-input" type="checkbox" id="remember_me" name="remember_me" wire:model="remember_me" />
                                         <label class="form-check-label" for="remember_me"> დამახსოვრება </label>
                                     </div>
                                 </div>

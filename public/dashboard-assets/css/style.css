@@ -13,7 +13,7 @@
     src: url('../fonts/helvetica-neue-lt-geo-55-roman-caps.ttf');
 }
 
-.card-title, .btn, .nav-link span, .content-header-title, .modal-header, .alert, .notification-title, .navigation li a {
+.card-title, .btn, .nav-link span, .content-header-title, .modal-header, .alert, .notification-title, .navigation li a, thead {
     font-family: 'HelveticaGeoCaps';
 }
 

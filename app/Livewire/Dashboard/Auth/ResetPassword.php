@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Dashboard\Auth;
 
-use App\Repositories\AdminRepository;
-use App\Repositories\VerificationRepository;
+use App\Models\Admin;
+use App\Models\Verification;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -15,28 +15,16 @@ class ResetPassword extends Component
     public $password_confirmation;
     public $value;
 
-    public function boot(
-        AdminRepository $adminRepository,
-        VerificationRepository $verificationRepository
-    )
-    {
-        $this->adminRepository = $adminRepository;
-        $this->verificationRepository = $verificationRepository;
-    }
-
     public function render()
     {
-        $verification = $this->verificationRepository->getItemByFields([
+        Verification::where([
             'type' => 'reset_password',
             'value' => $this->value,
-        ]);
-        if(empty($verification)) {
-            abort(404);
-        }
+        ])->firstOrFail();
         return view('livewire.dashboard.auth.reset-password')
             ->layout('components.dashboard.layout', [
                 'blank_page' => true
-            ]);
+        ]);
     }
 
     public function resetPassword()
@@ -51,17 +39,17 @@ class ResetPassword extends Component
             'password.same' => 'პაროლის განმეორება არ ემთხვევა!',
             'value.exists' => 'აღდგენის ბმული არასწორია!',
         ]);
-        $verification = $this->verificationRepository->getItemByFields([
+        $verification = Verification::where([
             'type' => 'reset_password',
             'value' => $this->value,
-        ]);
+        ])->first();
         if(empty($verification)) {
             $this->dispatch('reset-error', message: 'აღდგენის ბმული არასწორია!');
         } else {
-            $this->adminRepository->update(['id' => $verification->admin_id], [
+            Admin::find($verification->admin_id)->update([
                 'password' => Hash::make($this->password),
             ]);
-            $this->verificationRepository->forceDelete(['id' => $verification->id]);
+            Verification::where(['id' => $verification])->forceDelete();
         }
         $this->dispatch('reset-success', message: 'პაროლი წარმატებით განახლდა!');
     }
