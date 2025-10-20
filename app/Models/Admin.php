@@ -14,10 +14,15 @@ class Admin extends Authenticatable
 
     protected $table = "db_admins";
 
-    protected $fillable = ['name', 'lastname', 'email', 'phone','password', 'role_id'];
+    protected $fillable = ['name', 'lastname', 'email', 'phone','password', 'role_id', 'b_date', 'active'];
 
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function agent()
+    {
+        return $this->hasOne(Agent::class, 'admin_id','id');
     }
 }

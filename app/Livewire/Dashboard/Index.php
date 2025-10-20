@@ -10,7 +10,6 @@ class Index extends Component
 {
     public function render()
     {
-        SSService::uploadSSAplication();
         return view('livewire.dashboard.index')->layout('components.dashboard.layout');
     }
 }

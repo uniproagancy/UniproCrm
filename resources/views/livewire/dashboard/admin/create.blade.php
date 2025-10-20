@@ -18,6 +18,11 @@
                             <input type="text" id="lastname" wire:model="lastname" class="form-control @error('lastname') border-danger is-invalid @enderror">
                             @error('lastname') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
+                        <div class="mb-1 col-12">
+                            <label class="form-label" for="b_date">დაბადების თარიღი</label>
+                            <input type="date" id="b_date" wire:model="b_date" class="form-control @error('b_date') border-danger is-invalid @enderror">
+                            @error('b_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
                         <div class="mb-1 col-6">
                             <label class="form-label" for="email">ელ-ფოსტა</label>
                             <input type="email" id="email" wire:model="email" class="form-control @error('email') border-danger is-invalid @enderror" autocomplete="off">
@@ -48,18 +53,3 @@
         </div>
     </div>
 </div>
-
-@section('page_scripts')
-<script>
-    document.addEventListener("livewire:initialized", () => {
-        Livewire.on('admin-created', (event) => {
-            toastr.success(event.message, "შეტყობინება", {
-                closeButton: true,
-                progressBar: true,
-            });
-            let modal = bootstrap.Modal.getInstance(document.getElementById('createAdminModal'));
-            modal.hide();
-        });
-    });
-</script>
-@endsection

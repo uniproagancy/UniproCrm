@@ -23,7 +23,6 @@ class SSApiController extends Controller
     }
     public function uploadSSAplication(Upload $request)
     {
-        dd($request->all());
         $application_data = [
             'realEstateTypeId' => $request->realEstateTypeId,
             'realEstateDealTypeId' => $request->realEstateDealTypeId,

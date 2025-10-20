@@ -26,6 +26,7 @@
                 </button>
             </div>
         </div>
+        @if(count($admins) > 0)
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -54,8 +55,22 @@
                         <td>{{ $admin->id }}</td>
                         <td>{{ $admin->name }} {{ $admin->lastname }}</td>
                         <td><span class="badge badge-light-success">{{ $admin->role->name }}</span></td>
-                        <td>{{ $admin->email }}</td>
-                        <td>{{ $admin->phone }}</td>
+                        <td>
+                            {{ $admin->email }}
+                            @if($admin->verify_email === 1)
+                            <i class="text-success" data-feather="check-circle"></i>
+                            @else
+                            <i class="text-danger" data-feather="x-circle"></i>
+                            @endif
+                        </td>
+                        <td>
+                            {{ $admin->phone }}
+                            @if($admin->verify_phone === 1)
+                                <i class="text-success" data-feather="check-circle"></i>
+                            @else
+                                <i class="text-danger" data-feather="x-circle"></i>
+                            @endif
+                        </td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <div class="form-check form-switch form-check-success">
@@ -68,6 +83,11 @@
                             </div>
                         </td>
                         <td>
+                            @if($admin->role_id === 2 OR $admin->role_id === 3)
+                            <a href="#" class="text-body" wire:click="loadAdmin({{ $admin->id }})">
+                                <i class="text-warning" data-feather="external-link"></i>
+                            </a>
+                            @endif
                             <a href="{{ route('dashboard.admin.view', $admin->id) }}" class="text-body">
                                 <i data-feather="user"></i>
                             </a>
@@ -82,21 +102,57 @@
                                 </a>
                                 @endif
                             @endif
+                            @if(Auth::user()->role_id == 2)
+                            <a href="#"
+                               class="text-body"
+                               wire:click.prevent="loginAs({{ $admin->id }})">
+                                <i class="text-info" data-feather="log-in"></i>
+                            </a>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+        @else
+        <div class="px-2">
+            <div class="alert alert-warning" role="alert">
+                <div class="alert-body d-flex align-items-center">
+                    <i data-feather="alert-circle" class="me-50"></i>
+                    <span> ადმინისტრატორი ვერ მოიძებნა!</span>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
     {{$admins->links('livewire.dashboard.partials.pagination')}}
     @include('livewire.dashboard.admin.filter')
+    @include('livewire.dashboard.admin.agent')
 </div>
 @section('page_scripts')
 <script>
     document.addEventListener('livewire:initialized', () => {
 
-        Livewire.on('swal:confirm', data => {
+        Livewire.on('open-new-tab', (url) => {
+            window.open(url, '_blank');
+        });
+
+        Livewire.on('openViewAgentModal', () => {
+            const modal = new bootstrap.Modal(document.getElementById('viewAdminModal'))
+            modal.show();
+        });
+
+        Livewire.on('admin-created', (data) => {
+            toastr.success(data.message, "შეტყობინება", {
+                closeButton: true,
+                progressBar: true,
+            });
+            let modal = bootstrap.Modal.getInstance(document.getElementById('createAdminModal'));
+            modal.hide();
+        });
+
+        Livewire.on('swal:deleteConfirm', data => {
             Swal.fire({
                 title: data[0].title,
                 icon: data[0].icon,
@@ -110,7 +166,7 @@
             });
         });
 
-        Livewire.on('swal:restore', data => {
+        Livewire.on('swal:restoreConfirm', data => {
             Swal.fire({
                 title: data[0].title,
                 icon: data[0].icon,
@@ -124,13 +180,13 @@
             });
         });
 
-        window.addEventListener('swal:confirm-multiple', data => {
+        window.addEventListener('swal:delete-multiple', data => {
             Swal.fire({
                 title: data.detail[0].title,
-                icon: 'warning',
+                icon: data.detail[0].icon,
                 showCancelButton: true,
                 confirmButtonText: 'დიახ',
-                cancelButtonText: 'გაუქმება'
+                cancelButtonText: 'გაუქმება',
             }).then((result) => {
                 if (result.isConfirmed) {
                     Livewire.dispatch('deleteSelectedConfirmed', { ids: data.detail[0].ids });
@@ -140,11 +196,11 @@
 
         window.addEventListener('swal:restore-multiple', data => {
             Swal.fire({
-                title: data.detail[0].title,
+                title: 'ნამდვილად გსურთ მონიშნულების აღდგენა?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'დიახ',
-                cancelButtonText: 'გაუქმება'
+                cancelButtonText: 'გაუქმება',
             }).then((result) => {
                 if (result.isConfirmed) {
                     Livewire.dispatch('restoreSelectedConfirmed', { ids: data.detail[0].ids });

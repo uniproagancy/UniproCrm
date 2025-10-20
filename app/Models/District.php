@@ -9,5 +9,10 @@ class District extends Model
     //
     protected $table = 'db_districts';
 
-    protected $fillable = ['ss_id','parent_id','ss_parent_id', 'name'];
+    protected $fillable = ['parent_id', 'name'];
+
+    public function subdistricts()
+    {
+        return $this->hasMany(Subdistrict::class, 'district_id');
+    }
 }

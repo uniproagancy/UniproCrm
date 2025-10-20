@@ -22,6 +22,7 @@ class Create extends Component
     public $phone;
     public $role_id;
     public $password;
+    public $b_date;
     public $password_confirmation;
 
     public function render()
@@ -38,6 +39,7 @@ class Create extends Component
             'email'     => 'required|email|unique:db_admins,email',
             'phone'     => 'required|unique:db_admins,phone',
             'role_id'   => 'required|exists:db_roles,id',
+            'b_date'   => 'required|date',
         ], [
             'required'       => 'გთხოვთ შეავსოთ ყველა აუცილებელი ველი!',
             'email.email'    => 'გთხოვთ შეიყვანეთ სწორი ელ-ფოსტა!',
@@ -45,36 +47,30 @@ class Create extends Component
             'phone.unique'   => 'აღნიშნული ტელეფონის ნომერი უკვე დარეგისტრირებულია!',
             'role_id.exists' => 'დაფიქსირდა შეცდომა!',
         ]);
-
         $password = Str::password(8, true, true, false);
-
         $admin = Admin::create([
             'name'     => $this->name,
             'lastname' => $this->lastname,
             'email'    => $this->email,
             'phone'    => $this->phone,
-            'password' => Hash::make($password),
+            'password' => Hash::make('Unipro123!!!'),
             'role_id'  => $this->role_id,
+            'b_date'  => $this->b_date,
         ]);
-
-        SMSSenderService::send(501002452, 'თქვენი დროებითი პაროლი: ' . $password);
-
+        SMSSenderService::send($admin->phone, 'თქვენი დროებითი პაროლი: ' . $password);
         $verification_code = Str::random(40);
         Verification::create([
             'admin_id' => $admin->id,
             'type'     => 'email_verification',
             'value'    => $verification_code,
         ]);
-
         Mail::raw(
-            'აღდგენის ბმული: ' . route('dashboard.email-verification', $verification_code),
+            'ვერიფიკაციის ბმული: ' . route('dashboard.email-verification', $verification_code),
             fn($message) => $message
                 ->to($admin->email)
                 ->subject('პროფილის აქტივაცია')
         );
-
         $this->reset();
-
         $this->dispatch('admin-created', message: 'ადმინისტრატორი წარმატებით დაემატა!');
         $this->dispatch('admin-refresh');
     }

@@ -28,9 +28,11 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/core/menu/menu-types/horizontal-menu.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/plugins/extensions/ext-component-toastr.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/vendors/css/forms/select/select2.min.css') }}">
 
     @livewireStyles
 
+    @yield('page_styles')
     <link rel="stylesheet" type="text/css" href="{{ asset('dashboard-assets/css/style.css') }}">
 </head>
 <body class="horizontal-layout horizontal-menu navbar-floating footer-static @if(isset($blank_page)) blank-page @endif" data-open="hover" data-menu="horizontal-menu" data-col="" data-asset-path="{{ asset('dashboard-assets/') }}">
@@ -55,9 +57,16 @@
 <script src="{{ asset('dashboard-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
 <script src="{{ asset('dashboard-assets/vendors/js/extensions/toastr.min.js') }}"></script>
 <script src="{{ asset('dashboard-assets/vendors/js/extensions/sweetalert2.all.min.js') }}"></script>
+<script src="{{ asset('dashboard-assets/vendors/js/forms/select/select2.full.min.js') }}"></script>
 <script src="{{ asset('dashboard-assets/js/core/app-menu.js') }}"></script>
 <script src="{{ asset('dashboard-assets/js/core/app.js') }}"></script>
+<script src="{{ asset('dashboard-assets/js/scripts/forms/form-select2.js') }}"></script>
 @yield('page_scripts')
+@if(Auth::check())
+    <script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.12.0/dist/echo.iife.js"></script>
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+@endif
 <script>
     $(window).on('load', function() {
         if (feather) {
@@ -75,7 +84,7 @@
         });
     });
     document.addEventListener("livewire:init", () => {
-        Livewire.hook('morph.updated', ({ el, component }) => {
+        Livewire.hook('morph.updated', () => {
             feather.replace();
         });
     })
